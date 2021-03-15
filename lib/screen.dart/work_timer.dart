@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thesovereigndiary/model/timer.dart';
+import './settings.dart';
 import '../model/counter_timer.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../widgets/productivity_button.dart';
@@ -12,15 +13,45 @@ class WorkTimer extends StatefulWidget {
 class _WorkTimerState extends State<WorkTimer> {
   final EdgeInsets padding = EdgeInsets.all(5.0);
 
-  void emptyMethod() {}
+  void gotoSettings(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Settings(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final CounterTimer timer = CounterTimer();
     final buttonWidth = MediaQuery.of(context).size.width - 30;
+
     timer.startWork();
+
+    final List<PopupMenuItem<String>> menuItems = List<PopupMenuItem<String>>();
+    menuItems.add(
+      PopupMenuItem(
+        child: Text("Settings"),
+        value: 'Settings',
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Work Timer"),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return menuItems.toList();
+            },
+            onSelected: (value) {
+              if (value == "Settings") {
+                gotoSettings(context);
+              }
+            },
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
